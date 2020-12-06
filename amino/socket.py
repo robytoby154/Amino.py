@@ -42,6 +42,7 @@ class SocketHandler:
                 self.close()
                 self.start()
                 self.socketDelay = 0
+                self.reconnect = True
 
             self.socketDelay += 1
 
@@ -51,7 +52,7 @@ class SocketHandler:
 
                 break
 
-            time.sleep(5)
+            time.sleep(1)
 
     def on_open(self):
         if self.debug is True:
