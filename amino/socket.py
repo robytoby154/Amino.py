@@ -9,12 +9,13 @@ from sys import _getframe as getframe
 from .lib.util import objects
 
 class SocketHandler:
-    def __init__(self, client, socket_trace = False, debug = False, socketDelayFetch = 120, active = False):
+    def __init__(self, client, socket_trace = False, debug = False, socketDelayFetch = 120, autoractive = True):
         websocket.enableTrace(True)
         self.socket_url = "wss://ws1.narvii.com"
         self.client = client
         self.debug = debug
-        self.active = active #Whether auto-reconnect is active or not is provided in args
+        self.autoractive = autoractive #Whether auto-reconnect is active or not is provided in args
+        self.active = False 
         self.headers = None
         self.socket = None
         self.socket_thread = None
@@ -22,9 +23,9 @@ class SocketHandler:
         self.socket_stop = False
         self.socketDelay = 0
         self.socketDelayFetch = socketDelayFetch  # Reconnects every 120 seconds by default if custom value is not provided
-
-        self.socket_handler = threading.Thread(target = self.reconnect_handler)
-        self.socket_handler.start()
+        if autoractive:
+            self.socket_handler = threading.Thread(target = self.reconnect_handler)
+            self.socket_handler.start()
 
         websocket.enableTrace(socket_trace)
 
@@ -108,7 +109,8 @@ class SocketHandler:
 
         self.socket_thread = threading.Thread(target = self.socket.run_forever, kwargs = {"ping_interval": 60})
         self.socket_thread.start()
-        self.active = True
+        if autoractive:
+            self.active = True
 
         if self.debug is True:
             print(f"[socket][start] Socket Started")
