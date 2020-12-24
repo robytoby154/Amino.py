@@ -9,19 +9,19 @@ from sys import _getframe as getframe
 from .lib.util import objects
 
 class SocketHandler:
-    def __init__(self, client, socket_trace = False, debug = False):
+    def __init__(self, client, socket_trace = False, debug = False, socketDelayFetch = 120, active = False):
         websocket.enableTrace(True)
         self.socket_url = "wss://ws1.narvii.com"
         self.client = client
         self.debug = debug
-        self.active = False
+        self.active = active #Whether auto-reconnect is active or not is provided in args
         self.headers = None
         self.socket = None
         self.socket_thread = None
         self.reconnect = True
         self.socket_stop = False
         self.socketDelay = 0
-        self.socketDelayFetch = 120  # Reconnects every 120 seconds.
+        self.socketDelayFetch = socketDelayFetch  # Reconnects every 120 seconds by default if custom value is not provided
 
         self.socket_handler = threading.Thread(target = self.reconnect_handler)
         self.socket_handler.start()
