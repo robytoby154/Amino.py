@@ -14,8 +14,8 @@ class SocketHandler:
         self.socket_url = "wss://ws1.narvii.com"
         self.client = client
         self.debug = debug
-        self.autoractive = autoractive #Whether auto-reconnect is active or not is provided in args
         self.active = False 
+        self.autoractive = autoractive # Whether auto-reconnect is enabled or not is provided in args
         self.headers = None
         self.socket = None
         self.socket_thread = None
